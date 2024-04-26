@@ -1,67 +1,43 @@
 package com.example.inventoryapiserver.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Setter
+@Getter
+@Entity
 public class Item implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    @Setter
-    @NotNull
     private Long id;
 
-    @Getter
-    @Setter
-    @NotNull
     private String name;
 
-    @Getter
-    @Setter
-    @NotNull
     private String code;
 
-    @Getter
-    @Setter
     private String inventoryNum;
 
-    @Getter
-    @Setter
     private Long barcode;
 
-    @Getter
-    @Setter
     private Long manufactureDate;
 
-    @Getter
-    @Setter
     private String factoryNumber;
 
-    @Getter
-    @Setter
     private String universityBuilding;
 
-    @Getter
-    @Setter
     private String location;
 
-    @Getter
-    @Setter
-    @NotNull
     private Integer count;
 
-    public Item(String name, String code) {
-        this.name = name;
-        this.code = code;
-        this.count = 1;
+    public Item() {
     }
 
     public Item(String name, String code, Integer count) {
