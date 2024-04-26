@@ -24,13 +24,18 @@ public class ItemController {
 
     @PostMapping("")
     public Item createItem(@RequestBody Item item) {
-        Item newItem = new Item(item.getName(), item.getCode(), item.getCount());
+        Item newItem = new Item();
+        newItem.setCode(item.getCode());
+        newItem.setName(item.getName());
         newItem.setInventoryNum(item.getInventoryNum());
         newItem.setBarcode(item.getBarcode());
         newItem.setManufactureDate(item.getManufactureDate());
         newItem.setFactoryNumber(item.getFactoryNumber());
         newItem.setUniversityBuilding(item.getUniversityBuilding());
         newItem.setLocation(item.getLocation());
+        newItem.setCount(item.getCount());
+
+        newItem = itemRepository.save(newItem);
 
         return newItem;
     }

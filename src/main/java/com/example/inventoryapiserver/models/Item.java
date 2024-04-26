@@ -40,12 +40,6 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(String name, String code, Integer count) {
-        this.name = name;
-        this.code = code;
-        this.count = count;
-    }
-
     @Override
     public String toString() {
         return String.format(
