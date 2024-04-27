@@ -23,9 +23,39 @@ public class ItemController {
         return (List<Item>) itemRepository.findAll();
     }
 
+    @GetMapping("name/{name}")
+    public List<Item> findItemsByName(@PathVariable("name") String name) {
+        return itemRepository.findByName(name);
+    }
+
     @GetMapping("location/{location}")
     public List<Item> findItemsByLocation(@PathVariable("location") String location) {
         return itemRepository.findByLocation(location);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Item> getItem(@PathVariable("id") UUID id) {
+        return itemRepository.findById(id);
+    }
+
+    @GetMapping("code/{code}")
+    public Optional<Item> getItemByCode(@PathVariable("code") String code) {
+        return itemRepository.findByCode(code);
+    }
+
+    @GetMapping("inventoryNum/{inventoryNum}")
+    public Optional<Item> getItemByInventoryNum(@PathVariable("inventoryNum") String inventoryNum) {
+        return itemRepository.findByInventoryNum(inventoryNum);
+    }
+
+    @GetMapping("barcode/{barcode}")
+    public Optional<Item> getItemByBarcode(@PathVariable("barcode") Long barcode) {
+        return itemRepository.findByBarcode(barcode);
+    }
+
+    @GetMapping("factoryNumber/{factoryNumber}")
+    public Optional<Item> getItemByFactoryNumber(@PathVariable("factoryNumber") String factoryNumber) {
+        return itemRepository.findByFactoryNumber(factoryNumber);
     }
 
     @PostMapping("")
@@ -44,16 +74,6 @@ public class ItemController {
         newItem = itemRepository.save(newItem);
 
         return newItem;
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Item> getItem(@PathVariable("id") UUID id) {
-        return itemRepository.findById(id);
-    }
-
-    @GetMapping("barcode/{barcode}")
-    public Optional<Item> getItemByBarcode(@PathVariable("barcode") Long barcode) {
-        return itemRepository.findByBarcode(barcode);
     }
 
     @PutMapping("/{id}")
