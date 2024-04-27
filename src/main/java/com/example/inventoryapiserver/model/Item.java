@@ -3,12 +3,14 @@ package com.example.inventoryapiserver.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 @Setter
@@ -23,6 +25,7 @@ public class Item implements Serializable {
     @EqualsAndHashCode.Exclude
     private UUID id;
 
+    @NotNull
     private String name;
 
     private String code;
@@ -33,9 +36,9 @@ public class Item implements Serializable {
 
     private Long manufactureDate;
 
-    private String factoryNumber;
+    private String factoryNum;
 
-    private String universityBuilding;
+    private String building;
 
     private String location;
 
@@ -45,6 +48,20 @@ public class Item implements Serializable {
 
     private String lastUpdatedBy;
 
+    private Long revision;
+
     public Item() {
+        Date date = new Date();
+
+        this.changedAt = date.getTime();
+        this.revision = 0L;
+    }
+
+    public Item(String name) {
+        Date date = new Date();
+
+        this.name = name;
+        this.changedAt = date.getTime();
+        this.revision = 0L;
     }
 }

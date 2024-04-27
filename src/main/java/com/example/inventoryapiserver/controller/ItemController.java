@@ -2,21 +2,29 @@ package com.example.inventoryapiserver.controller;
 
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.repository.ItemRepository;
+import com.example.inventoryapiserver.service.ItemService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
     private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
-    public ItemController(ItemRepository itemRepository) {
+    public ItemController(ItemRepository itemRepository, ItemService itemService) {
         this.itemRepository = itemRepository;
+        this.itemService = itemService;
+    }
+
+    @PostMapping("/upload")
+    public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
+        List<Item> items = itemService.saveItemsToDatabase(file);
+        items = (List<Item>) itemRepository.saveAll(items);
+        return items;
     }
 
     @GetMapping("")
@@ -61,24 +69,25 @@ public class ItemController {
         return itemRepository.findByBarcode(barcode);
     }
 
-    @GetMapping("factoryNumber/{factoryNumber}")
-    public Optional<Item> getItemByFactoryNumber(@PathVariable("factoryNumber") String factoryNumber) {
-        return itemRepository.findByFactoryNumber(factoryNumber);
+    @GetMapping("factoryNum/{factoryNum}")
+    public Optional<Item> getItemByFactoryNum(@PathVariable("factoryNum") String factoryNum) {
+        return itemRepository.findByFactoryNum(factoryNum);
     }
 
     @PostMapping("")
     public Item createItem(@RequestBody Item item) {
-        Item newItem = new Item();
+        Date date = new Date();
+
+        Item newItem = new Item(item.getName());
         newItem.setCode(item.getCode());
-        newItem.setName(item.getName());
         newItem.setInventoryNum(item.getInventoryNum());
         newItem.setBarcode(item.getBarcode());
         newItem.setManufactureDate(item.getManufactureDate());
-        newItem.setFactoryNumber(item.getFactoryNumber());
-        newItem.setUniversityBuilding(item.getUniversityBuilding());
+        newItem.setFactoryNum(item.getFactoryNum());
+        newItem.setBuilding(item.getBuilding());
         newItem.setLocation(item.getLocation());
         newItem.setCount(item.getCount());
-        newItem.setChangedAt(item.getChangedAt());
+        newItem.setChangedAt(date.getTime());
         newItem.setLastUpdatedBy(item.getLastUpdatedBy());
 
         newItem = itemRepository.save(newItem);
@@ -88,24 +97,28 @@ public class ItemController {
 
     @PutMapping("/{id}")
     public Item updateItem(@PathVariable("id") UUID id, @RequestBody Item item) {
-        Item updatedItem = new Item();
+        Item updatedItem = new Item(item.getName());
 
         Optional<Item> existingItem = itemRepository.findById(id);
         if (existingItem.isPresent()) {
             updatedItem = existingItem.get();
-            updatedItem.setName(item.getName());
-            updatedItem.setCode(item.getCode());
-            updatedItem.setInventoryNum(item.getInventoryNum());
-            updatedItem.setBarcode(item.getBarcode());
-            updatedItem.setManufactureDate(item.getManufactureDate());
-            updatedItem.setFactoryNumber(item.getFactoryNumber());
-            updatedItem.setUniversityBuilding(item.getUniversityBuilding());
-            updatedItem.setLocation(item.getLocation());
-            updatedItem.setCount(item.getCount());
-            updatedItem.setChangedAt(item.getChangedAt());
-            updatedItem.setLastUpdatedBy(item.getLastUpdatedBy());
+            if (item.getRevision() >= updatedItem.getRevision()) {
+                Date date = new Date();
 
-            updatedItem = itemRepository.save(updatedItem);
+                updatedItem.setCode(item.getCode());
+                updatedItem.setInventoryNum(item.getInventoryNum());
+                updatedItem.setBarcode(item.getBarcode());
+                updatedItem.setManufactureDate(item.getManufactureDate());
+                updatedItem.setFactoryNum(item.getFactoryNum());
+                updatedItem.setBuilding(item.getBuilding());
+                updatedItem.setLocation(item.getLocation());
+                updatedItem.setCount(item.getCount());
+                updatedItem.setChangedAt(date.getTime());
+                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy());
+                updatedItem.setRevision(item.getRevision() + 1);
+
+                updatedItem = itemRepository.save(updatedItem);
+            }
         }
 
         return updatedItem;
