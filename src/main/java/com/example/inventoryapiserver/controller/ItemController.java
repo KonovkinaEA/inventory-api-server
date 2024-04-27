@@ -36,6 +36,11 @@ public class ItemController {
         return itemRepository.findByLocation(location);
     }
 
+    @GetMapping("lastUpdatedBy/{lastUpdatedBy}")
+    public List<Item> findItemsByLastUpdatedBy(@PathVariable("lastUpdatedBy") String lastUpdatedBy) {
+        return itemRepository.findByLastUpdatedBy(lastUpdatedBy);
+    }
+
     @GetMapping("/{id}")
     public Optional<Item> getItem(@PathVariable("id") UUID id) {
         return itemRepository.findById(id);
@@ -73,6 +78,8 @@ public class ItemController {
         newItem.setUniversityBuilding(item.getUniversityBuilding());
         newItem.setLocation(item.getLocation());
         newItem.setCount(item.getCount());
+        newItem.setChangedAt(item.getChangedAt());
+        newItem.setLastUpdatedBy(item.getLastUpdatedBy());
 
         newItem = itemRepository.save(newItem);
 
@@ -95,6 +102,8 @@ public class ItemController {
             updatedItem.setUniversityBuilding(item.getUniversityBuilding());
             updatedItem.setLocation(item.getLocation());
             updatedItem.setCount(item.getCount());
+            updatedItem.setChangedAt(item.getChangedAt());
+            updatedItem.setLastUpdatedBy(item.getLastUpdatedBy());
 
             updatedItem = itemRepository.save(updatedItem);
         }

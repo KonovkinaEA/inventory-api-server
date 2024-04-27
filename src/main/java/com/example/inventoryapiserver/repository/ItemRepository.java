@@ -29,4 +29,7 @@ public interface ItemRepository extends CrudRepository<Item, UUID> {
 
     @Query("FROM Item WHERE location = ?1 ORDER BY name ASC")
     List<Item> findByLocation(String location);
+
+    @Query("FROM Item WHERE lastUpdatedBy = ?1 ORDER BY name ASC")
+    List<Item> findByLastUpdatedBy(String lastUpdatedBy);
 }

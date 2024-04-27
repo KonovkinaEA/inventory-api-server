@@ -41,6 +41,10 @@ public class Item implements Serializable {
 
     private Integer count;
 
+    private Long changedAt;
+
+    private String lastUpdatedBy;
+
     public Item() {
     }
 }
