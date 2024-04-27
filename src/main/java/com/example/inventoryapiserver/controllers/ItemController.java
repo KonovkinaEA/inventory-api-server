@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/items")
@@ -20,6 +21,11 @@ public class ItemController {
     @GetMapping("")
     public List<Item> findAllItems() {
         return (List<Item>) itemRepository.findAll();
+    }
+
+    @GetMapping("location/{location}")
+    public List<Item> findItemsByLocation(@PathVariable("location") String location) {
+        return itemRepository.findByLocation(location);
     }
 
     @PostMapping("")
@@ -41,12 +47,17 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Item> getItem(@PathVariable("id") long id) {
+    public Optional<Item> getItem(@PathVariable("id") UUID id) {
         return itemRepository.findById(id);
     }
 
+    @GetMapping("barcode/{barcode}")
+    public Optional<Item> getItemByBarcode(@PathVariable("barcode") Long barcode) {
+        return itemRepository.findByBarcode(barcode);
+    }
+
     @PutMapping("/{id}")
-    public Item updateItem(@PathVariable("id") long id, @RequestBody Item item) {
+    public Item updateItem(@PathVariable("id") UUID id, @RequestBody Item item) {
         Item updatedItem = new Item();
 
         Optional<Item> existingItem = itemRepository.findById(id);
@@ -69,7 +80,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable("id") long id) {
+    public void deleteItem(@PathVariable("id") UUID id) {
         Optional<Item> item = itemRepository.findById(id);
         item.ifPresent(itemRepository::delete);
     }
