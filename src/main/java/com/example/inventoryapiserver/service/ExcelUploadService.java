@@ -9,14 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ExcelUploadService {
     public static boolean isValidExcelFile(MultipartFile file) {
-        System.out.println(file.getContentType());
         return Objects.equals(file.getContentType(), "application/vnd.ms-excel");
     }
 
@@ -24,11 +22,11 @@ public class ExcelUploadService {
         List<Item> items = new ArrayList<>();
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
-            Sheet sheet = workbook.getSheet("items");
+            Sheet sheet = workbook.getSheet("Лист_1");
 
             int rowIndex = 0;
             for (Row row : sheet) {
-                if (rowIndex == 0) {
+                if (rowIndex <= 1) {
                     rowIndex++;
                     continue;
                 }
@@ -39,13 +37,13 @@ public class ExcelUploadService {
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
                     switch (cellIndex) {
-                        case 1 -> item.setName(cell.getStringCellValue());
-                        case 2 -> item.setCode(cell.getStringCellValue());
-                        case 3 -> item.setInventoryNum(cell.getStringCellValue());
-//                        case 4 -> item.setManufactureDate((long) cell.getNumericCellValue());
-                        case 5 -> item.setFactoryNum(cell.getStringCellValue());
-                        case 6 -> item.setBuilding(cell.getStringCellValue());
-                        case 7 -> item.setLocation(cell.getStringCellValue());
+                        case 1 -> item.setName(cell.getStringCellValue().trim());
+                        case 2 -> item.setCode(cell.getStringCellValue().trim());
+                        case 3 -> item.setInventoryNum(cell.getStringCellValue().trim());
+                        case 4 -> item.setManufactureDate(convertToMilliseconds(cell.getStringCellValue()));
+                        case 5 -> item.setFactoryNum(cell.getStringCellValue().trim());
+                        case 6 -> item.setBuilding(cell.getStringCellValue().trim());
+                        case 7 -> item.setLocation(cell.getStringCellValue().trim());
                         case 8 -> item.setCount((int) cell.getNumericCellValue());
                         default -> {
                         }
@@ -62,4 +60,20 @@ public class ExcelUploadService {
         return items;
     }
 
+    private static long convertToMilliseconds(String dateStr) {
+        long milliseconds = 0;
+
+        if (!dateStr.isEmpty()) {
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date date = dateFormat.parse(dateStr);
+
+                milliseconds = date.getTime();
+            } catch (ParseException e) {
+                System.err.println("Ошибка при преобразовании даты: " + e.getMessage());
+            }
+        }
+
+        return milliseconds;
+    }
 }

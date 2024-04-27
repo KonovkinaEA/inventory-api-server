@@ -3,22 +3,19 @@ package com.example.inventoryapiserver.controller;
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.repository.ItemRepository;
 import com.example.inventoryapiserver.service.ItemService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
     private final ItemRepository itemRepository;
     private final ItemService itemService;
-
-    public ItemController(ItemRepository itemRepository, ItemService itemService) {
-        this.itemRepository = itemRepository;
-        this.itemService = itemService;
-    }
 
     @PostMapping("/upload")
     public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
@@ -78,14 +75,14 @@ public class ItemController {
     public Item createItem(@RequestBody Item item) {
         Date date = new Date();
 
-        Item newItem = new Item(item.getName());
-        newItem.setCode(item.getCode());
-        newItem.setInventoryNum(item.getInventoryNum());
+        Item newItem = new Item(item.getName().trim());
+        newItem.setCode(item.getCode().trim());
+        newItem.setInventoryNum(item.getInventoryNum().trim());
         newItem.setBarcode(item.getBarcode());
         newItem.setManufactureDate(item.getManufactureDate());
-        newItem.setFactoryNum(item.getFactoryNum());
-        newItem.setBuilding(item.getBuilding());
-        newItem.setLocation(item.getLocation());
+        newItem.setFactoryNum(item.getFactoryNum().trim());
+        newItem.setBuilding(item.getBuilding().trim());
+        newItem.setLocation(item.getLocation().trim());
         newItem.setCount(item.getCount());
         newItem.setChangedAt(date.getTime());
         newItem.setLastUpdatedBy(item.getLastUpdatedBy());
