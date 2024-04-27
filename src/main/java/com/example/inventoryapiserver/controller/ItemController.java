@@ -1,9 +1,10 @@
-package com.example.inventoryapiserver.controllers;
+package com.example.inventoryapiserver.controller;
 
-import com.example.inventoryapiserver.models.Item;
-import com.example.inventoryapiserver.repositories.ItemRepository;
+import com.example.inventoryapiserver.model.Item;
+import com.example.inventoryapiserver.repository.ItemRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +21,9 @@ public class ItemController {
 
     @GetMapping("")
     public List<Item> findAllItems() {
-        return (List<Item>) itemRepository.findAll();
+        List<Item> items = (List<Item>) itemRepository.findAll();
+        items.sort(Comparator.comparing(Item::getName));
+        return items;
     }
 
     @GetMapping("name/{name}")

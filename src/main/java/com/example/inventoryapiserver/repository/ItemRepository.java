@@ -1,6 +1,6 @@
-package com.example.inventoryapiserver.repositories;
+package com.example.inventoryapiserver.repository;
 
-import com.example.inventoryapiserver.models.Item;
+import com.example.inventoryapiserver.model.Item;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, UUID> {
 
-    @Query("FROM Item WHERE name = ?1")
+    @Query("FROM Item WHERE name = ?1 ORDER BY name ASC")
     List<Item> findByName(String name);
 
     @Query("FROM Item WHERE code = ?1")
@@ -27,6 +27,6 @@ public interface ItemRepository extends CrudRepository<Item, UUID> {
     @Query("FROM Item WHERE factoryNumber = ?1")
     Optional<Item> findByFactoryNumber(String factoryNumber);
 
-    @Query("FROM Item WHERE location = ?1")
+    @Query("FROM Item WHERE location = ?1 ORDER BY name ASC")
     List<Item> findByLocation(String location);
 }

@@ -1,6 +1,6 @@
 package com.example.inventoryapiserver.config;
 
-import com.example.inventoryapiserver.repositories.ItemRepository;
+import com.example.inventoryapiserver.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
