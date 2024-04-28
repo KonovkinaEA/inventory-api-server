@@ -3,6 +3,7 @@ package com.example.inventoryapiserver.controller;
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.repository.ItemRepository;
 import com.example.inventoryapiserver.service.ItemService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,9 +18,18 @@ public class ItemController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
 
+    @GetMapping("/download")
+    public void downloadItemsData(HttpServletResponse response) throws Exception {
+        List<Item> items = (List<Item>) itemRepository.findAll();
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        itemService.generateExcelReport(response, items);
+    }
+
     @PostMapping("/upload")
     public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
-        List<Item> items = itemService.saveItemsToDatabase(file);
+        List<Item> items = itemService.getItemsFromExcel(file);
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        itemRepository.deleteAll();
         items = (List<Item>) itemRepository.saveAll(items);
         return items;
     }
@@ -27,23 +37,29 @@ public class ItemController {
     @GetMapping("")
     public List<Item> findAllItems() {
         List<Item> items = (List<Item>) itemRepository.findAll();
-        items.sort(Comparator.comparing(Item::getName));
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
         return items;
     }
 
     @GetMapping("name/{name}")
     public List<Item> findItemsByName(@PathVariable("name") String name) {
-        return itemRepository.findByName(name);
+        List<Item> items = itemRepository.findByName(name);
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        return items;
     }
 
     @GetMapping("location/{location}")
     public List<Item> findItemsByLocation(@PathVariable("location") String location) {
-        return itemRepository.findByLocation(location);
+        List<Item> items = itemRepository.findByLocation(location);
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        return items;
     }
 
     @GetMapping("lastUpdatedBy/{lastUpdatedBy}")
     public List<Item> findItemsByLastUpdatedBy(@PathVariable("lastUpdatedBy") String lastUpdatedBy) {
-        return itemRepository.findByLastUpdatedBy(lastUpdatedBy);
+        List<Item> items = itemRepository.findByLastUpdatedBy(lastUpdatedBy);
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        return items;
     }
 
     @GetMapping("/{id}")
