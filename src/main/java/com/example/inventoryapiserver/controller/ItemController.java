@@ -20,9 +20,7 @@ public class ItemController {
 
     @GetMapping("/download")
     public void downloadItemsData(HttpServletResponse response) throws Exception {
-        List<Item> items = (List<Item>) itemRepository.findAll();
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        itemService.generateExcelReport(response, items);
+        itemService.generateExcelReport(response, findAllItems());
     }
 
     @PostMapping("/upload")
@@ -43,23 +41,17 @@ public class ItemController {
 
     @GetMapping("name/{name}")
     public List<Item> findItemsByName(@PathVariable("name") String name) {
-        List<Item> items = itemRepository.findByName(name);
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        return items;
+        return itemRepository.findByName(name);
     }
 
     @GetMapping("location/{location}")
     public List<Item> findItemsByLocation(@PathVariable("location") String location) {
-        List<Item> items = itemRepository.findByLocation(location);
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        return items;
+        return itemRepository.findByLocation(location);
     }
 
     @GetMapping("lastUpdatedBy/{lastUpdatedBy}")
     public List<Item> findItemsByLastUpdatedBy(@PathVariable("lastUpdatedBy") String lastUpdatedBy) {
-        List<Item> items = itemRepository.findByLastUpdatedBy(lastUpdatedBy);
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        return items;
+        return itemRepository.findByLastUpdatedBy(lastUpdatedBy);
     }
 
     @GetMapping("/{id}")
@@ -89,19 +81,16 @@ public class ItemController {
 
     @PostMapping("")
     public Item createItem(@RequestBody Item item) {
-        Date date = new Date();
-
-        Item newItem = new Item(item.getName().trim());
-        newItem.setCode(item.getCode().trim());
-        newItem.setInventoryNum(item.getInventoryNum().trim());
+        Item newItem = new Item(item.getName());
+        newItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
+        newItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
         newItem.setBarcode(item.getBarcode());
         newItem.setManufactureDate(item.getManufactureDate());
-        newItem.setFactoryNum(item.getFactoryNum().trim());
-        newItem.setBuilding(item.getBuilding().trim());
-        newItem.setLocation(item.getLocation().trim());
+        newItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
+        newItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);
+        newItem.setLocation(item.getLocation() != null ? item.getLocation().trim() : null);
         newItem.setCount(item.getCount());
-        newItem.setChangedAt(date.getTime());
-        newItem.setLastUpdatedBy(item.getLastUpdatedBy());
+        newItem.setLastUpdatedBy(item.getLastUpdatedBy() != null ? item.getLastUpdatedBy().trim() : null);
 
         newItem = itemRepository.save(newItem);
 
@@ -118,16 +107,16 @@ public class ItemController {
             if (item.getRevision() >= updatedItem.getRevision()) {
                 Date date = new Date();
 
-                updatedItem.setCode(item.getCode());
-                updatedItem.setInventoryNum(item.getInventoryNum());
+                updatedItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
+                updatedItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
                 updatedItem.setBarcode(item.getBarcode());
                 updatedItem.setManufactureDate(item.getManufactureDate());
-                updatedItem.setFactoryNum(item.getFactoryNum());
-                updatedItem.setBuilding(item.getBuilding());
-                updatedItem.setLocation(item.getLocation());
+                updatedItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
+                updatedItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);
+                updatedItem.setLocation(item.getLocation() != null ? item.getLocation().trim() : null);
                 updatedItem.setCount(item.getCount());
                 updatedItem.setChangedAt(date.getTime());
-                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy());
+                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy() != null ? item.getLastUpdatedBy().trim() : null);
                 updatedItem.setRevision(item.getRevision() + 1);
 
                 updatedItem = itemRepository.save(updatedItem);

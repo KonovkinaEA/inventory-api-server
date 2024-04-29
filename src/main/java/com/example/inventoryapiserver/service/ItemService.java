@@ -21,7 +21,7 @@ public class ItemService {
             try {
                 items = ExcelService.getItemsDataFromExcel(file.getInputStream());
             } catch (IOException e) {
-                throw new IllegalArgumentException("The file is not a valid excel file");
+                throw new IllegalArgumentException("Этот файл не является допустимым файлом Excel");
             }
         }
 

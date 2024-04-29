@@ -14,14 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
+import static com.example.inventoryapiserver.util.Utils.*;
 
 public class ExcelService {
-
-    private static final String[] HEADERS = {"№ п/п", "Основное средство", "Код", "Инвентарный номер", "Дата выпуска",
-            "Заводской номер", "Корпус", "Местоположение", "Количество"};
 
     public static boolean isValidExcelFile(MultipartFile file) {
         return Objects.equals(file.getContentType(), "application/vnd.ms-excel");
@@ -122,27 +122,5 @@ public class ExcelService {
         workbook.write(ops);
         workbook.close();
         ops.close();
-    }
-
-    private static long convertToMilliseconds(String dateStr) {
-        long milliseconds = 0;
-
-        if (!dateStr.isEmpty()) {
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date date = dateFormat.parse(dateStr);
-
-                milliseconds = date.getTime();
-            } catch (ParseException e) {
-                System.err.println("Ошибка при преобразовании даты: " + e.getMessage());
-            }
-        }
-
-        return milliseconds;
-    }
-
-    public static String convertToDate(long milliseconds) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        return dateFormat.format(new Date(milliseconds));
     }
 }
