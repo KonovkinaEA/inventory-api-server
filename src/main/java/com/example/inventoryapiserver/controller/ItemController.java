@@ -74,11 +74,6 @@ public class ItemController {
         return itemRepository.findByBarcode(barcode);
     }
 
-    @GetMapping("factoryNum/{factoryNum}")
-    public Optional<Item> getItemByFactoryNum(@PathVariable("factoryNum") String factoryNum) {
-        return itemRepository.findByFactoryNum(factoryNum);
-    }
-
     @PostMapping("")
     public Item createItem(@RequestBody Item item) {
         Item newItem = new Item(item.getName());

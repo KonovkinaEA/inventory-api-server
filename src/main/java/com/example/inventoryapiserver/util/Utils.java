@@ -26,7 +26,8 @@ public class Utils {
         return milliseconds;
     }
 
-    public static String convertToDate(long milliseconds) {
+    public static String convertToDate(Long milliseconds) {
+        if (milliseconds == null) return "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(new Date(milliseconds));
     }

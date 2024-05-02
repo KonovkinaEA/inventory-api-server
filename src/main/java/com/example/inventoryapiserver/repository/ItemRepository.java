@@ -24,9 +24,6 @@ public interface ItemRepository extends CrudRepository<Item, UUID> {
     @Query("FROM Item WHERE barcode = ?1")
     Optional<Item> findByBarcode(Long barcode);
 
-    @Query("FROM Item WHERE factoryNum = ?1")
-    Optional<Item> findByFactoryNum(String factoryNum);
-
     @Query("FROM Item WHERE location = ?1 ORDER BY name ASC")
     List<Item> findByLocation(String location);
 
