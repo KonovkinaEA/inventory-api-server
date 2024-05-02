@@ -1,8 +1,8 @@
 package com.example.inventoryapiserver.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +20,8 @@ import java.util.UUID;
 public class Item implements Serializable {
 
     @Id
-    @GeneratedValue
     @EqualsAndHashCode.Exclude
+    @NotNull
     private UUID id;
 
     private String name;
@@ -51,13 +51,15 @@ public class Item implements Serializable {
     public Item() {
         Date date = new Date();
 
+        this.id = UUID.randomUUID();
         this.changedAt = date.getTime();
         this.revision = 0L;
     }
 
-    public Item(String name) {
+    public Item(UUID id, String name) {
         Date date = new Date();
 
+        this.id = id;
         this.name = name;
         this.changedAt = date.getTime();
         this.revision = 0L;
