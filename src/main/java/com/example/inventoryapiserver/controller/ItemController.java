@@ -61,14 +61,14 @@ public class ItemController {
     }
 
     @GetMapping("/excel/download")
-    public void downloadItemsData(HttpServletResponse response) throws Exception {
+    public void downloadItems(HttpServletResponse response) throws Exception {
         List<Item> items = (List<Item>) itemRepository.findAll();
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
         itemService.generateExcelReport(response, items);
     }
 
     @PostMapping("/excel/upload")
-    public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
+    public List<Item> uploadItems(@RequestParam("file") MultipartFile file) {
         List<Item> items = itemService.getItemsFromExcel(file);
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
         items = (List<Item>) itemRepository.saveAll(items);
@@ -77,7 +77,7 @@ public class ItemController {
     }
 
     @GetMapping("item")
-    public Optional<Item> getItem(
+    public Optional<Item> findItem(
             @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String code,
             @RequestParam(required = false) String inventoryNum,
