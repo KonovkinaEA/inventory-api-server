@@ -19,22 +19,6 @@ public class ItemController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
 
-    @GetMapping("/excel/download")
-    public void downloadItemsData(HttpServletResponse response) throws Exception {
-        List<Item> items = (List<Item>) itemRepository.findAll();
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        itemService.generateExcelReport(response, items);
-    }
-
-    @PostMapping("/excel/upload")
-    public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
-        List<Item> items = itemService.getItemsFromExcel(file);
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        items = (List<Item>) itemRepository.saveAll(items);
-
-        return items;
-    }
-
     @GetMapping("")
     public List<Item> findItems(
             @RequestParam(required = false) String name,
@@ -56,24 +40,60 @@ public class ItemController {
         return items;
     }
 
+    @PatchMapping("")
+    public List<Item> updateItems(@RequestBody List<Item> items) {
+        for (Item item : items) {
+            if (item.getRevision() < 0L) {
+                createItem(item);
+            } else {
+                updateItem(item);
+            }
+        }
+
+        List<Item> updatedItems = (List<Item>) itemRepository.findAll();
+        updatedItems.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        return updatedItems;
+    }
+
+    @DeleteMapping("")
+    public void deleteItems() {
+        itemRepository.deleteAll();
+    }
+
+    @GetMapping("/excel/download")
+    public void downloadItemsData(HttpServletResponse response) throws Exception {
+        List<Item> items = (List<Item>) itemRepository.findAll();
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        itemService.generateExcelReport(response, items);
+    }
+
+    @PostMapping("/excel/upload")
+    public List<Item> uploadItemsData(@RequestParam("file") MultipartFile file) {
+        List<Item> items = itemService.getItemsFromExcel(file);
+        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        items = (List<Item>) itemRepository.saveAll(items);
+
+        return items;
+    }
+
     @GetMapping("item")
     public Optional<Item> getItem(
             @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String code,
             @RequestParam(required = false) String inventoryNum,
-            @RequestParam(required = false) Long barcode
+            @RequestParam(required = false) String barcode
     ) {
         int count = 0;
         if (id != null) count++;
         if (StringUtils.hasText(code)) count++;
         if (StringUtils.hasText(inventoryNum)) count++;
-        if (barcode != null) count++;
+        if (StringUtils.hasText(barcode)) count++;
         if (count > 1) throw new IllegalArgumentException("Only one parameter must be specified");
 
         if (id != null) return itemRepository.findById(id);
         if (StringUtils.hasText(code)) return itemRepository.findByCode(code);
         if (StringUtils.hasText(inventoryNum)) return itemRepository.findByInventoryNum(inventoryNum);
-        if (barcode != null) return itemRepository.findByBarcode(barcode);
+        if (StringUtils.hasText(barcode)) return itemRepository.findByBarcode(barcode);
 
         throw new IllegalArgumentException("At least one parameter must be specified");
     }
@@ -83,7 +103,7 @@ public class ItemController {
         Item newItem = new Item(item.getId(), item.getName());
         newItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
         newItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
-        newItem.setBarcode(item.getBarcode());
+        newItem.setBarcode(item.getBarcode() != null ? item.getBarcode().trim() : null);
         newItem.setManufactureDate(item.getManufactureDate());
         newItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
         newItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);
@@ -98,10 +118,9 @@ public class ItemController {
 
     @PutMapping("item")
     public Item updateItem(@RequestBody Item item) {
-        UUID id = item.getId();
         Item updatedItem = new Item();
 
-        Optional<Item> existingItem = itemRepository.findById(id);
+        Optional<Item> existingItem = itemRepository.findById(item.getId());
         if (existingItem.isPresent()) {
             updatedItem = existingItem.get();
             if (item.getRevision() >= updatedItem.getRevision()) {
@@ -110,7 +129,7 @@ public class ItemController {
                 updatedItem.setName(item.getName());
                 updatedItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
                 updatedItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
-                updatedItem.setBarcode(item.getBarcode());
+                updatedItem.setBarcode(item.getBarcode() != null ? item.getBarcode().trim() : null);
                 updatedItem.setManufactureDate(item.getManufactureDate());
                 updatedItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
                 updatedItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);

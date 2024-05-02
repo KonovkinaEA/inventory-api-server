@@ -22,7 +22,7 @@ public interface ItemRepository extends CrudRepository<Item, UUID> {
     Optional<Item> findByInventoryNum(String inventoryNum);
 
     @Query("FROM Item WHERE barcode = ?1")
-    Optional<Item> findByBarcode(Long barcode);
+    Optional<Item> findByBarcode(String barcode);
 
     @Query("FROM Item WHERE location = ?1 ORDER BY name ASC")
     List<Item> findByLocation(String location);

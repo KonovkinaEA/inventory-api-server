@@ -30,7 +30,7 @@ public class Item implements Serializable {
 
     private String inventoryNum;
 
-    private Long barcode;
+    private String barcode;
 
     private Long manufactureDate;
 
