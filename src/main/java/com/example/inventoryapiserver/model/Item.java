@@ -52,7 +52,15 @@ public class Item implements Serializable {
         Date date = new Date();
 
         this.id = UUID.randomUUID();
+        this.name = "";
+        this.code = "";
+        this.inventoryNum = "";
+        this.barcode = "";
+        this.factoryNum = "";
+        this.building = "";
+        this.location = "";
         this.changedAt = date.getTime();
+        this.lastUpdatedBy = "";
         this.revision = 0L;
     }
 
@@ -61,7 +69,14 @@ public class Item implements Serializable {
 
         this.id = id;
         this.name = name;
+        this.code = "";
+        this.inventoryNum = "";
+        this.barcode = "";
+        this.factoryNum = "";
+        this.building = "";
+        this.location = "";
         this.changedAt = date.getTime();
+        this.lastUpdatedBy = "";
         this.revision = 0L;
     }
 }

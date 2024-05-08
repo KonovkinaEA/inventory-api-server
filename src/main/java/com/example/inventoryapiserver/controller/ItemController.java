@@ -100,16 +100,16 @@ public class ItemController {
 
     @PostMapping("item")
     public Item createItem(@RequestBody Item item) {
-        Item newItem = new Item(item.getId(), item.getName());
-        newItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
-        newItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
-        newItem.setBarcode(item.getBarcode() != null ? item.getBarcode().trim() : null);
+        Item newItem = new Item(item.getId(), item.getName().trim());
+        newItem.setCode(item.getCode().trim());
+        newItem.setInventoryNum(item.getInventoryNum().trim());
+        newItem.setBarcode(item.getBarcode().trim());
         newItem.setManufactureDate(item.getManufactureDate());
-        newItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
-        newItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);
-        newItem.setLocation(item.getLocation() != null ? item.getLocation().trim() : null);
+        newItem.setFactoryNum(item.getFactoryNum().trim());
+        newItem.setBuilding(item.getBuilding().trim());
+        newItem.setLocation(item.getLocation().trim());
         newItem.setCount(item.getCount());
-        newItem.setLastUpdatedBy(item.getLastUpdatedBy() != null ? item.getLastUpdatedBy().trim() : null);
+        newItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());
 
         newItem = itemRepository.save(newItem);
 
@@ -126,17 +126,17 @@ public class ItemController {
             if (item.getRevision() >= updatedItem.getRevision()) {
                 Date date = new Date();
 
-                updatedItem.setName(item.getName());
-                updatedItem.setCode(item.getCode() != null ? item.getCode().trim() : null);
-                updatedItem.setInventoryNum(item.getInventoryNum() != null ? item.getInventoryNum().trim() : null);
-                updatedItem.setBarcode(item.getBarcode() != null ? item.getBarcode().trim() : null);
+                updatedItem.setName(item.getName().trim());
+                updatedItem.setCode(item.getCode().trim());
+                updatedItem.setInventoryNum(item.getInventoryNum().trim());
+                updatedItem.setBarcode(item.getBarcode().trim());
                 updatedItem.setManufactureDate(item.getManufactureDate());
-                updatedItem.setFactoryNum(item.getFactoryNum() != null ? item.getFactoryNum().trim() : null);
-                updatedItem.setBuilding(item.getBuilding() != null ? item.getBuilding().trim() : null);
-                updatedItem.setLocation(item.getLocation() != null ? item.getLocation().trim() : null);
+                updatedItem.setFactoryNum(item.getFactoryNum().trim());
+                updatedItem.setBuilding(item.getBuilding().trim());
+                updatedItem.setLocation(item.getLocation().trim());
                 updatedItem.setCount(item.getCount());
                 updatedItem.setChangedAt(date.getTime());
-                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy() != null ? item.getLastUpdatedBy().trim() : null);
+                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());
                 updatedItem.setRevision(item.getRevision() + 1);
 
                 updatedItem = itemRepository.save(updatedItem);
