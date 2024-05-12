@@ -1,6 +1,7 @@
 package com.example.inventoryapiserver.controller;
 
 import com.example.inventoryapiserver.model.Item;
+import com.example.inventoryapiserver.model.ItemsPatch;
 import com.example.inventoryapiserver.repository.ItemRepository;
 import com.example.inventoryapiserver.service.ItemService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,8 +42,12 @@ public class ItemController {
     }
 
     @PatchMapping("")
-    public List<Item> updateItems(@RequestBody List<Item> items) {
-        for (Item item : items) {
+    public List<Item> updateItems(
+            @RequestParam(required = false) String location,
+            @RequestBody ItemsPatch itemsPatch
+    ) {
+        for (UUID id : itemsPatch.getIdsToDelete()) deleteItem(id);
+        for (Item item : itemsPatch.getItems()) {
             if (item.getRevision() < 0L) {
                 createItem(item);
             } else {
@@ -50,8 +55,14 @@ public class ItemController {
             }
         }
 
-        List<Item> updatedItems = (List<Item>) itemRepository.findAll();
+        List<Item> updatedItems;
+        if (StringUtils.hasText(location)) {
+            updatedItems = itemRepository.findByLocation(location);
+        } else {
+            updatedItems = (List<Item>) itemRepository.findAll();
+        }
         updatedItems.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+
         return updatedItems;
     }
 
