@@ -21,20 +21,8 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("")
-    public List<Item> findItems(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String lastUpdatedBy
-    ) {
-        int count = 0;
-        if (StringUtils.hasText(name)) count++;
-        if (StringUtils.hasText(location)) count++;
-        if (StringUtils.hasText(lastUpdatedBy)) count++;
-        if (count > 1) throw new IllegalArgumentException("Only one parameter must be specified");
-
-        if (StringUtils.hasText(name)) return itemRepository.findByName(name);
+    public List<Item> findItems(@RequestParam(required = false) String location) {
         if (StringUtils.hasText(location)) return itemRepository.findByLocation(location);
-        if (StringUtils.hasText(lastUpdatedBy)) return itemRepository.findByLastUpdatedBy(lastUpdatedBy);
 
         List<Item> items = (List<Item>) itemRepository.findAll();
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));

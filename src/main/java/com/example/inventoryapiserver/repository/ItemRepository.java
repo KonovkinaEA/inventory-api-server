@@ -12,9 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, UUID> {
 
-    @Query("FROM Item WHERE name = ?1 ORDER BY name ASC")
-    List<Item> findByName(String name);
-
     @Query("FROM Item WHERE code = ?1")
     Optional<Item> findByCode(String code);
 
@@ -26,7 +23,4 @@ public interface ItemRepository extends CrudRepository<Item, UUID> {
 
     @Query("FROM Item WHERE location = ?1 ORDER BY name ASC")
     List<Item> findByLocation(String location);
-
-    @Query("FROM Item WHERE lastUpdatedBy = ?1 ORDER BY name ASC")
-    List<Item> findByLastUpdatedBy(String lastUpdatedBy);
 }
