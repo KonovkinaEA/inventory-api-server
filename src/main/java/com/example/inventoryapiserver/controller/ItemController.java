@@ -82,6 +82,7 @@ public class ItemController {
     public List<Item> uploadItems(@RequestParam("file") MultipartFile file) {
         List<Item> items = itemService.getItemsFromExcel(file);
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        itemRepository.deleteAll();
         items = (List<Item>) itemRepository.saveAll(items);
 
         return items;
@@ -134,7 +135,7 @@ public class ItemController {
         Optional<Item> existingItem = itemRepository.findById(item.getId());
         if (existingItem.isPresent()) {
             updatedItem = existingItem.get();
-            if (item.getRevision() >= updatedItem.getRevision()) {
+            if (!item.equals(updatedItem) && item.getRevision() >= updatedItem.getRevision()) {
                 Date date = new Date();
 
                 updatedItem.setName(item.getName().trim());
