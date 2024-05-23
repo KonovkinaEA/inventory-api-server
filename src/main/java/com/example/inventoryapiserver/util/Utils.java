@@ -7,7 +7,7 @@ import java.util.Date;
 public class Utils {
 
     public static final String[] HEADERS = {"№ п/п", "Основное средство", "Код", "Инвентарный номер", "Дата выпуска",
-            "Заводской номер", "Корпус", "Местоположение", "Количество"};
+            "Заводской номер", "Корпус", "Местоположение", "Количество", "Правильно расположен"};
 
     public static long convertToMilliseconds(String dateStr) {
         long milliseconds = 0;

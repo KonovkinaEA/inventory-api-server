@@ -21,6 +21,7 @@ public class ItemTest {
         assertEquals("", item.getFactoryNum());
         assertEquals("", item.getBuilding());
         assertEquals("", item.getLocation());
+        assertTrue(item.getIsCorrectlyPlaced());
         assertNull(item.getCount());
         assertNotNull(item.getChangedAt());
         assertEquals("", item.getLastUpdatedBy());
@@ -43,6 +44,7 @@ public class ItemTest {
         assertEquals("", item.getFactoryNum());
         assertEquals("", item.getBuilding());
         assertEquals("", item.getLocation());
+        assertTrue(item.getIsCorrectlyPlaced());
         assertNull(item.getCount());
         assertNotNull(item.getChangedAt());
         assertEquals("", item.getLastUpdatedBy());
@@ -60,6 +62,7 @@ public class ItemTest {
         String factoryNum = "Test Factory Number";
         String building = "Test Building";
         String location = "Test Location";
+        Boolean isCorrectlyPlaced = false;
         Integer count = 10;
         Long changedAt = System.currentTimeMillis();
         String lastUpdatedBy = "Tester";
@@ -75,6 +78,7 @@ public class ItemTest {
         item.setFactoryNum(factoryNum);
         item.setBuilding(building);
         item.setLocation(location);
+        item.setIsCorrectlyPlaced(isCorrectlyPlaced);
         item.setCount(count);
         item.setChangedAt(changedAt);
         item.setLastUpdatedBy(lastUpdatedBy);
@@ -89,6 +93,7 @@ public class ItemTest {
         assertEquals(factoryNum, item.getFactoryNum());
         assertEquals(building, item.getBuilding());
         assertEquals(location, item.getLocation());
+        assertFalse(item.getIsCorrectlyPlaced());
         assertEquals(count, item.getCount());
         assertEquals(changedAt, item.getChangedAt());
         assertEquals(lastUpdatedBy, item.getLastUpdatedBy());
@@ -101,7 +106,7 @@ public class ItemTest {
         String name = "Test Item";
 
         Item item = new Item(id, name);
-        String expectedString = "Item(id=" + id + ", name=" + name + ", code=, inventoryNum=, barcode=, manufactureDate=null, factoryNum=, building=, location=, count=null, changedAt=" + item.getChangedAt() + ", lastUpdatedBy=, revision=0)";
+        String expectedString = "Item(id=" + id + ", name=" + name + ", code=, inventoryNum=, barcode=, manufactureDate=null, factoryNum=, building=, location=, isCorrectlyPlaced=true, count=null, changedAt=" + item.getChangedAt() + ", lastUpdatedBy=, revision=0)";
 
         assertEquals(expectedString, item.toString());
     }

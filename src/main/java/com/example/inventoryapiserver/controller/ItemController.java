@@ -60,9 +60,15 @@ public class ItemController {
     }
 
     @GetMapping("/excel/download")
-    public void downloadItems(HttpServletResponse response) throws Exception {
+    public void downloadAllItems(HttpServletResponse response) throws Exception {
         List<Item> items = (List<Item>) itemRepository.findAll();
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+        itemService.generateExcelReport(response, items);
+    }
+
+    @GetMapping("/excel/download/{location}")
+    public void downloadAllItems(@PathVariable("location") String location, HttpServletResponse response) throws Exception {
+        List<Item> items = itemRepository.findByLocation(location);
         itemService.generateExcelReport(response, items);
     }
 
@@ -108,6 +114,7 @@ public class ItemController {
         newItem.setFactoryNum(item.getFactoryNum().trim());
         newItem.setBuilding(item.getBuilding().trim());
         newItem.setLocation(item.getLocation().trim());
+        newItem.setIsCorrectlyPlaced(item.getIsCorrectlyPlaced());
         newItem.setCount(item.getCount());
         newItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());
 
@@ -134,6 +141,7 @@ public class ItemController {
                 updatedItem.setFactoryNum(item.getFactoryNum().trim());
                 updatedItem.setBuilding(item.getBuilding().trim());
                 updatedItem.setLocation(item.getLocation().trim());
+                updatedItem.setIsCorrectlyPlaced(item.getIsCorrectlyPlaced());
                 updatedItem.setCount(item.getCount());
                 updatedItem.setChangedAt(date.getTime());
                 updatedItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());

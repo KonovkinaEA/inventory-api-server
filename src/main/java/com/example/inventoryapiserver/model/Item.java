@@ -40,6 +40,8 @@ public class Item implements Serializable {
 
     private String location;
 
+    private Boolean isCorrectlyPlaced;
+
     private Integer count;
 
     private Long changedAt;
@@ -59,6 +61,7 @@ public class Item implements Serializable {
         this.factoryNum = "";
         this.building = "";
         this.location = "";
+        this.isCorrectlyPlaced = true;
         this.changedAt = date.getTime();
         this.lastUpdatedBy = "";
         this.revision = 0L;
@@ -75,6 +78,7 @@ public class Item implements Serializable {
         this.factoryNum = "";
         this.building = "";
         this.location = "";
+        this.isCorrectlyPlaced = true;
         this.changedAt = date.getTime();
         this.lastUpdatedBy = "";
         this.revision = 0L;

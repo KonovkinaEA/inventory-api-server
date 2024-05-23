@@ -56,6 +56,7 @@ public class ExcelServiceTest {
         row.createCell(6).setCellValue("Building");
         row.createCell(7).setCellValue("Location");
         row.createCell(8).setCellValue(10);
+        row.createCell(9).setCellValue("Нет");
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
@@ -79,6 +80,7 @@ public class ExcelServiceTest {
             assertEquals("Building", item.getBuilding());
             assertEquals("Location", item.getLocation());
             assertEquals(10, item.getCount());
+            assertFalse(item.getIsCorrectlyPlaced());
         }
     }
 
@@ -95,15 +97,24 @@ public class ExcelServiceTest {
 
     @Test
     public void testExportItemsDataToExcel() throws Exception {
-        Item item = new Item(UUID.randomUUID(), "Test Item");
-        item.setCode("Code123");
-        item.setInventoryNum("Inv123");
-        item.setManufactureDate(System.currentTimeMillis());
-        item.setFactoryNum("Factory123");
-        item.setBuilding("Building123");
-        item.setLocation("Location123");
-        item.setCount(10);
-        List<Item> items = List.of(item);
+        Item item1 = new Item(UUID.randomUUID(), "Test Item");
+        item1.setCode("Code123");
+        item1.setInventoryNum("Inv123");
+        item1.setManufactureDate(System.currentTimeMillis());
+        item1.setFactoryNum("Factory123");
+        item1.setBuilding("Building123");
+        item1.setLocation("Location123");
+        item1.setCount(10);
+        Item item2 = new Item(UUID.randomUUID(), "Test Item");
+        item2.setCode("Code123");
+        item2.setInventoryNum("Inv123");
+        item2.setManufactureDate(System.currentTimeMillis());
+        item2.setFactoryNum("Factory123");
+        item2.setBuilding("Building123");
+        item2.setLocation("Location123");
+        item2.setCount(10);
+        item2.setIsCorrectlyPlaced(false);
+        List<Item> items = List.of(item1, item2);
 
         HttpServletResponse response = mock(HttpServletResponse.class);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -140,6 +140,17 @@ public class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+        verify(itemRepository, times(1)).findAll();
+        verify(itemService, times(1)).generateExcelReport(any(), anyList());
+    }
+
+    @Test
+    public void testDownloadItemsWithLocation() throws Exception {
+        mockMvc.perform(get("/api/v1/items/excel/download/3-405")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(itemRepository, times(1)).findByLocation("3-405");
         verify(itemService, times(1)).generateExcelReport(any(), anyList());
     }
 

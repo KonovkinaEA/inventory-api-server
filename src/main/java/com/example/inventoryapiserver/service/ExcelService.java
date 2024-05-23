@@ -54,6 +54,7 @@ public class ExcelService {
                         case 6 -> item.setBuilding(cell.getStringCellValue().trim());
                         case 7 -> item.setLocation(cell.getStringCellValue().trim());
                         case 8 -> item.setCount((int) cell.getNumericCellValue());
+                        case 9 -> item.setIsCorrectlyPlaced(!Objects.equals(cell.getStringCellValue(), "Нет"));
                         default -> {
                         }
                     }
@@ -75,7 +76,7 @@ public class ExcelService {
 
         HSSFRow title = sheet.createRow(0);
         title.createCell(0).setCellValue("ЦМО");
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
 
         HSSFRow headlines = sheet.createRow(1);
 
@@ -90,6 +91,7 @@ public class ExcelService {
 
         rowIndex = 2;
         for (Item item : items) {
+
             HSSFRow row = sheet.createRow(rowIndex);
             String[] values = {
                     String.valueOf(rowIndex - 1),
@@ -99,7 +101,7 @@ public class ExcelService {
                     convertToDate(item.getManufactureDate()),
                     item.getFactoryNum(),
                     item.getBuilding().trim(),
-                    item.getLocation()
+                    item.getLocation(),
             };
 
             for (int i = 0; i < values.length; i++) {
@@ -110,6 +112,7 @@ public class ExcelService {
                 }
             }
             row.createCell(8).setCellValue(item.getCount());
+            row.createCell(9).setCellValue(item.getIsCorrectlyPlaced() ? "Да" : "Нет");
 
             rowIndex++;
         }
