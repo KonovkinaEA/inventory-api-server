@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -91,13 +93,19 @@ public class ItemController {
     }
 
     @PostMapping("/excel/upload")
-    public List<Item> uploadItems(@RequestParam("file") MultipartFile file) {
-        List<Item> items = itemService.getItemsFromExcel(file);
-        items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        itemRepository.deleteAll();
-        items = (List<Item>) itemRepository.saveAll(items);
+    public ModelAndView uploadItems(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/upload-page");
+        try {
+            List<Item> items = itemService.getItemsFromExcel(file);
+            items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
+            itemRepository.deleteAll();
+            itemRepository.saveAll(items);
 
-        return items;
+            redirectAttributes.addFlashAttribute("message", "Successfully uploaded " + file.getOriginalFilename() + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+        }
+        return modelAndView;
     }
 
     @GetMapping("item")
