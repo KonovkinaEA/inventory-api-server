@@ -2,8 +2,11 @@ package com.example.inventoryapiserver.controller;
 
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.model.ItemsPatch;
+import com.example.inventoryapiserver.model.Report;
 import com.example.inventoryapiserver.repository.ItemRepository;
+import com.example.inventoryapiserver.repository.ReportRepository;
 import com.example.inventoryapiserver.service.ItemService;
+import com.example.inventoryapiserver.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,15 +38,19 @@ public class ItemControllerTest {
     private ItemRepository itemRepository;
 
     @MockBean
+    private ReportRepository reportRepository;
+
+    @MockBean
     private ItemService itemService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     private List<Item> items;
+    private List<Report> reports;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         Item item1 = new Item(UUID.randomUUID(), "Item 1");
         Item item2 = new Item(UUID.randomUUID(), "Item 2");
         Item item3 = new Item(UUID.randomUUID(), "Item 3");
@@ -55,6 +62,7 @@ public class ItemControllerTest {
         item3.setLocation("Location 1");
 
         items = Arrays.asList(item1, item2, item3);
+        reports = Utils.convertItemListToReportList(items);
 
         when(itemRepository.findAll()).thenReturn(items);
         when(itemRepository.findByLocation("Location 1")).thenReturn(Arrays.asList(item2, item3));
@@ -64,6 +72,9 @@ public class ItemControllerTest {
         when(itemRepository.findByBarcode(item1.getBarcode())).thenReturn(Optional.of(item1));
         when(itemRepository.save(any(Item.class))).thenReturn(item1);
         when(itemRepository.saveAll(items)).thenReturn(items);
+        when(reportRepository.saveAll(any())).thenReturn(reports);
+        doNothing().when(reportRepository).deleteAll();
+        doNothing().when(itemService).getExcelFromItems(any(), anyList());
         when(itemService.getItemsFromExcel(any())).thenReturn(items);
     }
 
@@ -141,7 +152,7 @@ public class ItemControllerTest {
                 .andExpect(status().isOk());
 
         verify(itemRepository, times(1)).findAll();
-        verify(itemService, times(1)).generateExcelReport(any(), anyList());
+        verify(itemService, times(1)).getExcelFromItems(any(), anyList());
     }
 
     @Test
@@ -151,7 +162,29 @@ public class ItemControllerTest {
                 .andExpect(status().isOk());
 
         verify(itemRepository, times(1)).findByLocation("3-405");
-        verify(itemService, times(1)).generateExcelReport(any(), anyList());
+        verify(itemService, times(1)).getExcelFromItems(any(), anyList());
+    }
+
+    @Test
+    public void testSaveReport() throws Exception {
+        mockMvc.perform(post("/api/v1/items/excel/report")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(items)))
+                .andExpect(status().isOk());
+
+        verify(reportRepository, times(1)).deleteAll();
+        verify(reportRepository, times(1)).saveAll(reports);
+    }
+
+    @Test
+    public void testGetReport() throws Exception {
+        mockMvc.perform(get("/api/v1/items/excel/report")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(reportRepository, times(1)).findAll();
+        verify(itemService, times(1)).getExcelFromItems(any(), anyList());
+        verify(reportRepository, times(1)).deleteAll();
     }
 
     @Test

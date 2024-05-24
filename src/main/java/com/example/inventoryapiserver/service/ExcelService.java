@@ -1,5 +1,6 @@
 package com.example.inventoryapiserver.service;
 
+import com.example.inventoryapiserver.model.BaseItem;
 import com.example.inventoryapiserver.model.Item;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -70,7 +71,7 @@ public class ExcelService {
         return items;
     }
 
-    public static void exportItemsDataToExcel(HttpServletResponse response, List<Item> items) throws Exception {
+    public static void exportItemsDataToExcel(HttpServletResponse response, List<BaseItem> items) throws Exception {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Лист_1");
 
@@ -90,7 +91,7 @@ public class ExcelService {
         }
 
         rowIndex = 2;
-        for (Item item : items) {
+        for (BaseItem item : items) {
 
             HSSFRow row = sheet.createRow(rowIndex);
             String[] values = {

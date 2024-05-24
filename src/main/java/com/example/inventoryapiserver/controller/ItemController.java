@@ -1,8 +1,11 @@
 package com.example.inventoryapiserver.controller;
 
+import com.example.inventoryapiserver.model.BaseItem;
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.model.ItemsPatch;
+import com.example.inventoryapiserver.model.Report;
 import com.example.inventoryapiserver.repository.ItemRepository;
+import com.example.inventoryapiserver.repository.ReportRepository;
 import com.example.inventoryapiserver.service.ItemService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -18,6 +21,8 @@ import java.util.*;
 public class ItemController {
 
     private final ItemRepository itemRepository;
+    private final ReportRepository reportRepository;
+
     private final ItemService itemService;
 
     @GetMapping("")
@@ -61,15 +66,28 @@ public class ItemController {
 
     @GetMapping("/excel/download")
     public void downloadAllItems(HttpServletResponse response) throws Exception {
-        List<Item> items = (List<Item>) itemRepository.findAll();
+        List<BaseItem> items = new ArrayList<>((List<Item>) itemRepository.findAll());
         items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
-        itemService.generateExcelReport(response, items);
+        itemService.getExcelFromItems(response, items);
     }
 
     @GetMapping("/excel/download/{location}")
-    public void downloadAllItems(@PathVariable("location") String location, HttpServletResponse response) throws Exception {
-        List<Item> items = itemRepository.findByLocation(location);
-        itemService.generateExcelReport(response, items);
+    public void downloadItemsWithLocation(@PathVariable("location") String location, HttpServletResponse response) throws Exception {
+        List<BaseItem> items = new ArrayList<>(itemRepository.findByLocation(location));
+        itemService.getExcelFromItems(response, items);
+    }
+
+    @PostMapping("/excel/report")
+    public void saveReport(@RequestBody List<Report> items) {
+        reportRepository.deleteAll();
+        reportRepository.saveAll(items);
+    }
+
+    @GetMapping("/excel/report")
+    public void getReport(HttpServletResponse response) throws Exception {
+        List<BaseItem> items = new ArrayList<>((List<Report>) reportRepository.findAll());
+        itemService.getExcelFromItems(response, items);
+        reportRepository.deleteAll();
     }
 
     @PostMapping("/excel/upload")

@@ -1,8 +1,13 @@
 package com.example.inventoryapiserver.util;
 
+import com.example.inventoryapiserver.model.Item;
+import com.example.inventoryapiserver.model.Report;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Utils {
 
@@ -30,5 +35,11 @@ public class Utils {
         if (milliseconds == null) return "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(new Date(milliseconds));
+    }
+
+    public static List<Report> convertItemListToReportList(List<Item> items) {
+        return items.stream()
+                .map(Report::new)
+                .collect(Collectors.toList());
     }
 }

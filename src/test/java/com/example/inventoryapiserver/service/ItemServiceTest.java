@@ -1,5 +1,6 @@
 package com.example.inventoryapiserver.service;
 
+import com.example.inventoryapiserver.model.BaseItem;
 import com.example.inventoryapiserver.model.Item;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
@@ -64,14 +65,14 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testGenerateExcelReport() throws Exception {
+    public void testGetExcelFromItems() throws Exception {
         try (MockedStatic<ExcelService> excelService = mockStatic(ExcelService.class)) {
             excelService.when(() -> ExcelService.exportItemsDataToExcel(any(), anyList())).thenAnswer(invocation -> null);
             doNothing().when(response).setContentType(anyString());
             doNothing().when(response).setHeader(anyString(), anyString());
-            List<Item> list = Arrays.asList(mock(Item.class), mock(Item.class));
+            List<BaseItem> list = Arrays.asList(mock(BaseItem.class), mock(BaseItem.class));
 
-            itemService.generateExcelReport(response, list);
+            itemService.getExcelFromItems(response, list);
 
             verify(response, times(1)).setContentType("application/octet-stream");
             verify(response, times(1))

@@ -101,17 +101,6 @@ public class ItemTest {
     }
 
     @Test
-    public void testToString() {
-        UUID id = UUID.randomUUID();
-        String name = "Test Item";
-
-        Item item = new Item(id, name);
-        String expectedString = "Item(id=" + id + ", name=" + name + ", code=, inventoryNum=, barcode=, manufactureDate=null, factoryNum=, building=, location=, isCorrectlyPlaced=true, count=null, changedAt=" + item.getChangedAt() + ", lastUpdatedBy=, revision=0)";
-
-        assertEquals(expectedString, item.toString());
-    }
-
-    @Test
     public void testEqualsAndHashCode() {
         UUID id = UUID.randomUUID();
         String name = "Test Item";

@@ -1,5 +1,6 @@
 package com.example.inventoryapiserver.service;
 
+import com.example.inventoryapiserver.model.BaseItem;
 import com.example.inventoryapiserver.model.Item;
 import com.example.inventoryapiserver.util.Utils;
 import jakarta.servlet.ServletOutputStream;
@@ -43,8 +44,8 @@ public class ExcelServiceTest {
         HSSFWorkbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet("Лист_1");
 
-        Row headerRow = sheet.createRow(0);
-        Row subHeaderRow = sheet.createRow(1);
+        sheet.createRow(0);
+        sheet.createRow(1);
 
         Row row = sheet.createRow(2);
         row.createCell(0).setCellValue(1);
@@ -97,7 +98,7 @@ public class ExcelServiceTest {
 
     @Test
     public void testExportItemsDataToExcel() throws Exception {
-        Item item1 = new Item(UUID.randomUUID(), "Test Item");
+        BaseItem item1 = new Item(UUID.randomUUID(), "Test Item");
         item1.setCode("Code123");
         item1.setInventoryNum("Inv123");
         item1.setManufactureDate(System.currentTimeMillis());
@@ -105,7 +106,7 @@ public class ExcelServiceTest {
         item1.setBuilding("Building123");
         item1.setLocation("Location123");
         item1.setCount(10);
-        Item item2 = new Item(UUID.randomUUID(), "Test Item");
+        BaseItem item2 = new Item(UUID.randomUUID(), "Test Item");
         item2.setCode("Code123");
         item2.setInventoryNum("Inv123");
         item2.setManufactureDate(System.currentTimeMillis());
@@ -114,7 +115,7 @@ public class ExcelServiceTest {
         item2.setLocation("Location123");
         item2.setCount(10);
         item2.setIsCorrectlyPlaced(false);
-        List<Item> items = List.of(item1, item2);
+        List<BaseItem> items = List.of(item1, item2);
 
         HttpServletResponse response = mock(HttpServletResponse.class);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

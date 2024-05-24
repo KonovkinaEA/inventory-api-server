@@ -1,5 +1,6 @@
 package com.example.inventoryapiserver.service;
 
+import com.example.inventoryapiserver.model.BaseItem;
 import com.example.inventoryapiserver.model.Item;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class ItemService {
         return items;
     }
 
-    public void generateExcelReport(HttpServletResponse response, List<Item> items) throws Exception {
+    public void getExcelFromItems(HttpServletResponse response, List<BaseItem> items) throws Exception {
         response.setContentType("application/octet-stream");
 
         String headerKey = "Content-Disposition";
