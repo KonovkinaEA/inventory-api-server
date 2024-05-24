@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory System</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form, .download-button, .download-audience-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="file"], .audience-input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .upload-button, .download-button a, .download-audience-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+            width: 100%;
+            text-align: center;
+        }
+
+        .upload-button:hover, .download-button a:hover, .download-audience-button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+
+        .download-button {
+            width: 100%;
+        }
+
+        .download-button a {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .download-audience-form {
+            width: 100%;
+        }
+
+        .download-audience-form form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .audience-input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .download-audience-button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Загрузить данные из файла Excel</h1>
+        <form action="#" class="form" enctype="multipart/form-data" method="post"
+              th:action="@{/api/v1/items/excel/upload}">
+            <input accept=".xls,.xlsx" name="file" required type="file"/>
+            <button class="upload-button" type="submit">Загрузить файл</button>
+        </form>
+        <p th:text="${message}"></p>
+    </div>
+
+    <div class="card">
+        <div class="download-audience-form">
+            <form id="downloadAudienceForm">
+                <input class="audience-input" id="locationInput" name="location" placeholder="Введите место..."
+                       type="text">
+                <button class="download-audience-button" type="submit">Скачать список всех предметов</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateButton() {
+        var location = document.getElementById("locationInput").value.trim();
+        var button = document.querySelector('.download-audience-button');
+        button.textContent = location ? 'Скачать список предметов в аудитории' : 'Скачать список всех предметов';
+    }
+
+    document.getElementById("locationInput").addEventListener("input", updateButton);
+
+    document.getElementById("downloadAudienceForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var location = document.getElementById("locationInput").value.trim();
+        var url = location ? "/api/v1/items/excel/download/" + location : "/api/v1/items/excel/download";
+        window.location.href = url;
+    });
+
+    updateButton();
+</script>
+
+</body>
+</html>

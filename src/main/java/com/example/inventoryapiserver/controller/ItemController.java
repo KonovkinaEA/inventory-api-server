@@ -94,16 +94,22 @@ public class ItemController {
 
     @PostMapping("/excel/upload")
     public ModelAndView uploadItems(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/upload-page");
+        ModelAndView modelAndView = new ModelAndView("redirect:/");
         try {
             List<Item> items = itemService.getItemsFromExcel(file);
             items.sort(Comparator.comparing(item -> item.getName().toLowerCase()));
             itemRepository.deleteAll();
             itemRepository.saveAll(items);
 
-            redirectAttributes.addFlashAttribute("message", "Successfully uploaded " + file.getOriginalFilename() + "!");
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "Данные из файла \"" + file.getOriginalFilename() + "\" были успешно загружены!"
+            );
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", "Failed to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "Не удалось загрузить файл \"" + file.getOriginalFilename() + "\" => " + e.getMessage()
+            );
         }
         return modelAndView;
     }
