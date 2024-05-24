@@ -114,16 +114,17 @@
         <h1>Загрузить данные из файла Excel</h1>
         <form action="#" class="form" enctype="multipart/form-data" method="post"
               th:action="@{/api/v1/items/excel/upload}">
-            <input accept=".xls,.xlsx" name="file" required type="file"/>
-            <button class="upload-button" type="submit">Загрузить файл</button>
+            <input accept=".xls" name="file" required type="file"/>
+            <button class="upload-button" type="submit">Отправить</button>
         </form>
         <p th:text="${message}"></p>
     </div>
 
     <div class="card">
+        <h1>Получить данные</h1>
         <div class="download-audience-form">
             <form id="downloadAudienceForm">
-                <input class="audience-input" id="locationInput" name="location" placeholder="Введите место..."
+                <input class="audience-input" id="locationInput" name="location" placeholder="Введите номер аудитории"
                        type="text">
                 <button class="download-audience-button" type="submit">Скачать список всех предметов</button>
             </form>
