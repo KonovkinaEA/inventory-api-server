@@ -25,7 +25,6 @@ public class Report extends BaseItem {
         this.setIsCorrectlyPlaced(baseItem.getIsCorrectlyPlaced());
         this.setCount(baseItem.getCount());
         this.setChangedAt(baseItem.getChangedAt());
-        this.setLastUpdatedBy(baseItem.getLastUpdatedBy());
         this.setRevision(baseItem.getRevision());
     }
 }

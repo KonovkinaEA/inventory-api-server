@@ -148,7 +148,6 @@ public class ItemController {
         newItem.setLocation(item.getLocation().trim());
         newItem.setIsCorrectlyPlaced(item.getIsCorrectlyPlaced());
         newItem.setCount(item.getCount());
-        newItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());
 
         newItem = itemRepository.save(newItem);
 
@@ -176,7 +175,6 @@ public class ItemController {
                 updatedItem.setIsCorrectlyPlaced(item.getIsCorrectlyPlaced());
                 updatedItem.setCount(item.getCount());
                 updatedItem.setChangedAt(date.getTime());
-                updatedItem.setLastUpdatedBy(item.getLastUpdatedBy().trim());
                 updatedItem.setRevision(item.getRevision() + 1);
 
                 updatedItem = itemRepository.save(updatedItem);

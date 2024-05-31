@@ -47,8 +47,6 @@ public class BaseItem implements Serializable {
 
     private Long changedAt;
 
-    private String lastUpdatedBy;
-
     private Long revision;
 
     public BaseItem() {
@@ -64,7 +62,6 @@ public class BaseItem implements Serializable {
         this.location = "";
         this.isCorrectlyPlaced = true;
         this.changedAt = date.getTime();
-        this.lastUpdatedBy = "";
         this.revision = 0L;
     }
 
@@ -81,7 +78,6 @@ public class BaseItem implements Serializable {
         this.location = "";
         this.isCorrectlyPlaced = true;
         this.changedAt = date.getTime();
-        this.lastUpdatedBy = "";
         this.revision = 0L;
     }
 }
