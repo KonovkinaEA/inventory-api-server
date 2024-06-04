@@ -24,7 +24,6 @@ public class ItemTest {
         assertTrue(item.getIsCorrectlyPlaced());
         assertNull(item.getCount());
         assertNotNull(item.getChangedAt());
-        assertEquals("", item.getLastUpdatedBy());
         assertEquals(0L, item.getRevision());
     }
 
@@ -47,7 +46,6 @@ public class ItemTest {
         assertTrue(item.getIsCorrectlyPlaced());
         assertNull(item.getCount());
         assertNotNull(item.getChangedAt());
-        assertEquals("", item.getLastUpdatedBy());
         assertEquals(0L, item.getRevision());
     }
 
@@ -65,7 +63,6 @@ public class ItemTest {
         Boolean isCorrectlyPlaced = false;
         Integer count = 10;
         Long changedAt = System.currentTimeMillis();
-        String lastUpdatedBy = "Tester";
         Long revision = 1L;
 
         Item item = new Item();
@@ -81,7 +78,6 @@ public class ItemTest {
         item.setIsCorrectlyPlaced(isCorrectlyPlaced);
         item.setCount(count);
         item.setChangedAt(changedAt);
-        item.setLastUpdatedBy(lastUpdatedBy);
         item.setRevision(revision);
 
         assertEquals(id, item.getId());
@@ -96,7 +92,6 @@ public class ItemTest {
         assertFalse(item.getIsCorrectlyPlaced());
         assertEquals(count, item.getCount());
         assertEquals(changedAt, item.getChangedAt());
-        assertEquals(lastUpdatedBy, item.getLastUpdatedBy());
         assertEquals(revision, item.getRevision());
     }
 

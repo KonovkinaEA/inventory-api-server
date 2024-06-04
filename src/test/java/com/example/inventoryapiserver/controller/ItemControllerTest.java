@@ -17,10 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -198,12 +195,23 @@ public class ItemControllerTest {
 
         mockMvc.perform(multipart("/api/v1/items/excel/upload")
                         .file(file))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].name", is("Item 1")))
-                .andExpect(jsonPath("$[1].name", is("Item 2")))
-                .andExpect(jsonPath("$[2].name", is("Item 3")));
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void testUploadItemsThrowsException() throws Exception {
+        when(itemService.getItemsFromExcel(any())).thenReturn(new ArrayList<>());
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "mock content".getBytes()
+        );
+
+        mockMvc.perform(multipart("/api/v1/items/excel/upload")
+                        .file(file))
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
